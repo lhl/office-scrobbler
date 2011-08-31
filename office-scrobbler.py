@@ -11,7 +11,8 @@ import time
 
 def main():
   # Get Settings
-  s = json.load(open('settings'))
+  SETTINGS_FILE = os.path.abspath(os.path.dirname(sys.argv[0])) + '/settings'
+  s = json.load(open(SETTINGS_FILE))
 
   # Get Lastcheck
   LC_FILE = os.path.abspath(os.path.dirname(sys.argv[0])) + '/lastcheck'
@@ -24,7 +25,7 @@ def main():
   http://www.dssw.co.uk/sleepcentre/threads/system_idle_time_how_to_retrieve.html
   timing the perl, it actually runs slightly faster, but it's not worth optimizing
   '''
-  for line in reversed(subprocess.check_output(['ioreg', '-c', 'IOHIDSystem']).split('\n')):
+  for line in reversed(subprocess.check_output(['/usr/sbin/ioreg', '-c', 'IOHIDSystem']).split('\n')):
     if line.find('Idle') > -1:
       idle = int(line.split()[-1])/1000000000.0
 
