@@ -1,0 +1,8 @@
+{
+  "idle": 600,
+  "api_key": "YOUR_API_KEY_HERE",
+  "api_secret": "YOUR_API_SECRET_HERE",
+  "user": "YOUR_LASTFM_ACCOUNT",
+  "pw": "YOUR_HASHED_PASSWORD",
+  "follow_user": "LASTFM_ACCOUNT_TO_FOLLOW"
+}
