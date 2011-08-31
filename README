@@ -1,0 +1,18 @@
+Summary: simple script to follow another accounts scrobbles (ie for office use)
+
+After quite a long time, I finally decided to put some hardware I had lying around to use (a Trim-Slice) as a low-power MPD device. So now there's an office music player. And I've set it up to scrobble to an office account.
+
+But what about my own? Paul Lamere had apparently written a solution for that and he wrote an article about it: http://musicmachinery.com/2010/06/11/metoo-a-scrobbler-for-the-room/ but never published the code. Boo-urns!
+
+So, here's my version.  It has some sharp edges, but it does the trick.
+
+Features:
+* Mac OS X specific idle time support; since I'm running this on a desktop workstation instead of my laptop
+* All settings stored in a handy dandy JSON file
+* Supports Now Playing as well as recent tracks
+
+Install:
+* Requires python27 (json, subprocess.check_output) and pylast
+* Copy settings.example to settings
+* Requires an API Key, see http://www.last.fm/api/account
+* Put in your crontab
