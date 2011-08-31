@@ -49,7 +49,7 @@ def main():
   np = follow_user.get_now_playing()
   if np:
     mynp = pylast.User(s['user'], lastfm).get_now_playing()
-    if mynp.get_artist() == np.get_artist() and \
+    if mynp and mynp.get_artist() == np.get_artist() and \
        mynp.get_title() == np.get_title():
       # print 'already playing'
       pass
