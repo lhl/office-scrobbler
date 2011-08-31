@@ -1,2 +1,7 @@
-# Don't load me! This is just an example!
+### Don't load me! This is just an example!
+
+# If you are using MacPorts, this may be useful
+PATH=/opt/local/bin:$PATH
+
+# This runs the script every minute
 * * * * * /path/to/office-scrobbler/office-scrobbler.py
