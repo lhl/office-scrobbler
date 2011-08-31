@@ -9,14 +9,25 @@ import sys
 import time
 
 
+if sys.stdout.isatty():
+  debug = 1
+else:
+  debug = 0
+
+
 def main():
   # Get Settings
   SETTINGS_FILE = os.path.abspath(os.path.dirname(sys.argv[0])) + '/settings'
+  if debug:
+    print 'settings file:', SETTINGS_FILE
   s = json.load(open(SETTINGS_FILE))
 
   # Get Lastcheck
   LC_FILE = os.path.abspath(os.path.dirname(sys.argv[0])) + '/lastcheck'
   lastcheck = os.stat(LC_FILE).st_mtime
+  if debug:
+    print 'lastcheck file:', LC_FILE
+    print 'lastcheck time:', lastcheck
 
 
   ### Mac OS X Idle Time
@@ -31,6 +42,8 @@ def main():
 
       if idle > s['idle']:
         touch(LC_FILE)
+        if debug:
+          print 'exiting, idle time %r is greater than %r' % (idle, s['idle'])
         sys.exit()
       else:
         break
@@ -38,6 +51,8 @@ def main():
 
   ### Still here? OK, let's do this...
 
+  if debug:
+    print 'logging into Last.fm...'
   lastfm = pylast.LastFMNetwork(api_key = s['api_key'], 
                                 api_secret = s['api_secret'], 
                                 username = s['user'], 
@@ -48,14 +63,19 @@ def main():
   # Set Now Playing
   np = follow_user.get_now_playing()
   if np:
+    if debug:
+      print '%r now playing:' % s['follow_user'], np
     mynp = pylast.User(s['user'], lastfm).get_now_playing()
+    if debug:
+      print '%r now playing:' % s['user'], mynp
     if mynp and mynp.get_artist() == np.get_artist() and \
        mynp.get_title() == np.get_title():
-      # print 'already playing'
-      pass
+      if debug:
+        print 'not updating, already playing'
     else:
       # Scrobble Now Playing Track
-      # print np
+      if debug:
+        print 'updating...'
       lastfm.update_now_playing(np.get_artist(),
                                 np.get_title(),
                                 np.get_album(),
@@ -67,6 +87,10 @@ def main():
   '''
   There's a race condition here. I'm erring on the side of avoiding dupes even if there's the slight chance you could miss a song submission. You could probably do some smart dupe-checking instead, but that's a PITA.
   '''
+
+  if debug:
+    print 'getting recently played tracks...'
+
   played_tracks = follow_user.get_recent_tracks()
   current = time.time()
   touch(LC_FILE) # if updates fail, tough noogies
@@ -75,12 +99,14 @@ def main():
   if(len(played_tracks)):
     for pt in played_tracks:
       if int(pt.timestamp) > lastcheck:
-        # print pt
-        # print pt.track.get_artist()
-        # print pt.track.get_title()
-        # print pt.track.get_album()
-        # print pt.timestamp
-        # print
+        if debug:
+          print 'scrobbling new track:'
+          # print pt
+          print ' ', pt.track.get_artist()
+          print ' ', pt.track.get_title()
+          print ' ', pt.track.get_album()
+          print ' ', pt.timestamp
+          print
 
         lastfm.scrobble(pt.track.get_artist(),
                         pt.track.get_title(),
@@ -93,7 +119,8 @@ def main():
       We use the idle time as a rough sanity check - we only submit the last song if say your computer just woke up from sleep or something.
       '''
       if current-lastcheck > s['idle']:
-        break
+        if debug:
+          print 'skipping rest - lastcheck older than idle; just woke up?'
 
 
 # http://stackoverflow.com/questions/1158076/implement-touch-using-python
