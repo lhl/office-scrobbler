@@ -79,7 +79,7 @@ def main():
       lastfm.update_now_playing(np.get_artist(),
                                 np.get_title(),
                                 np.get_album(),
-                                duration=np.get_duration(),
+                                duration=np.get_duration()/1000,
                                 mbid=np.get_mbid())
 
 
@@ -112,7 +112,7 @@ def main():
                         pt.track.get_title(),
                         pt.timestamp,
                         pt.track.get_album(),
-                        duration=pt.track.get_duration(),
+                        duration=pt.track.get_duration()/1000,
                         mbid=pt.track.get_mbid())
 
       '''
