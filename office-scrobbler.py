@@ -76,9 +76,9 @@ def main():
       # Scrobble Now Playing Track
       if debug:
         print 'updating...'
-      lastfm.update_now_playing(np.get_artist(),
+      lastfm.update_now_playing(np.get_artist().get_name(),
                                 np.get_title(),
-                                np.get_album(),
+                                np.get_album().get_title(),
                                 duration=np.get_duration()/1000,
                                 mbid=np.get_mbid())
 
@@ -102,16 +102,16 @@ def main():
         if debug:
           print 'scrobbling new track:'
           # print pt
-          print ' ', pt.track.get_artist()
+          print ' ', pt.track.get_artist().get_name()
           print ' ', pt.track.get_title()
-          print ' ', pt.track.get_album()
+          print ' ', pt.track.get_album().get_title()
           print ' ', pt.timestamp
           print
 
-        lastfm.scrobble(pt.track.get_artist(),
+        lastfm.scrobble(pt.track.get_artist().get_name(),
                         pt.track.get_title(),
                         pt.timestamp,
-                        pt.track.get_album(),
+                        pt.track.get_album().get_title(),
                         duration=pt.track.get_duration()/1000,
                         mbid=pt.track.get_mbid())
 
