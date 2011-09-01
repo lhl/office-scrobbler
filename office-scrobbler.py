@@ -76,9 +76,14 @@ def main():
       # Scrobble Now Playing Track
       if debug:
         print 'updating...'
+
+      if np.get_album():
+        album_title = np.get_album().get_title()
+      else:
+        album_title = None
       lastfm.update_now_playing(np.get_artist().get_name(),
                                 np.get_title(),
-                                np.get_album().get_title(),
+                                album_title,
                                 duration=np.get_duration()/1000,
                                 mbid=np.get_mbid())
 
@@ -99,19 +104,24 @@ def main():
   if(len(played_tracks)):
     for pt in played_tracks:
       if int(pt.timestamp) > lastcheck:
+        if pt.track.get_album():
+          album_title = pt.track.get_album().get_title()
+        else:
+          album_title = None
+
         if debug:
           print 'scrobbling new track:'
           # print pt
           print ' ', pt.track.get_artist().get_name()
           print ' ', pt.track.get_title()
-          print ' ', pt.track.get_album().get_title()
+          print ' ', album_title
           print ' ', pt.timestamp
           print
 
         lastfm.scrobble(pt.track.get_artist().get_name(),
                         pt.track.get_title(),
                         pt.timestamp,
-                        pt.track.get_album().get_title(),
+                        album_title,
                         duration=pt.track.get_duration()/1000,
                         mbid=pt.track.get_mbid())
 
@@ -121,6 +131,7 @@ def main():
       if current-lastcheck > s['idle']:
         if debug:
           print 'skipping rest - lastcheck older than idle; just woke up?'
+        break
 
 
 # http://stackoverflow.com/questions/1158076/implement-touch-using-python
